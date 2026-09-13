@@ -1,5 +1,5 @@
-# Windows FastCtx global Agent
+# Shared Windows global Agent
 
-This directory is a snapshot of the global `AGENTS.md` from the Windows computer where FastCtx MCP is installed.
+This is the reviewed shared global `AGENTS.md` for the Windows computers using this repository.
 
-The rules tell Codex to use FastCtx for local file inspection and mechanical replacements. On another computer, its AI should compare this snapshot with that computer's `$CODEX_HOME/AGENTS.md` and merge only the applicable rules. Do not overwrite the other computer's file blindly; these instructions are useful only when its FastCtx MCP server and tools are available.
+Keep machine-specific exceptions in `AGENTS.override.md` and do not commit secrets, credentials, local cache paths, or one-off machine state. The shared file assumes the Error Summary skill and its current FastCtx rules are available; if a computer lacks FastCtx, follow the documented fallback instead of inventing a different tool boundary.
