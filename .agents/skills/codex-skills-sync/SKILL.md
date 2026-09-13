@@ -18,6 +18,15 @@ Maintain the user's personal skills repository as the source of truth and expose
 
 The repository should contain skills under `.agents/skills/`, with one skill directory per direct child. Each skill directory must contain `SKILL.md`. Keep repository-level documentation and manifests outside `.agents/skills/`.
 
+## Global Agent instructions
+
+- Optional shared baseline: `global/AGENTS.shared.md`.
+- Local target: `$CODEX_HOME/AGENTS.md` (normally `$HOME/.codex/AGENTS.md`).
+- Global instructions are separate from skills and are not synchronized by default.
+- Use `-SyncGlobalAgent` only when the user explicitly requests it. If the local file is absent, copy the baseline; if it is identical, do nothing; if it differs, stop and show the conflict. The shared baseline must be reviewed and created by the user; this repository does not assume that every computer has the same global instructions.
+- Do not overwrite `AGENTS.override.md`. Codex gives that file precedence over `AGENTS.md`.
+- Machine-specific global instructions should remain local or be stored as explicitly named files under `global/machines/`; do not silently concatenate them because `AGENTS.md` has no reliable include mechanism.
+
 ## Workflow
 
 1. Determine the platform, repository URL, clone directory, and shared skills directory. Preserve explicit user paths.
@@ -33,7 +42,8 @@ The recommended layout is:
 
 ```text
 Personal-use-of-skill/
-
+  global/
+    AGENTS.shared.md
   .agents/skills/
     codex-skills-sync/
       SKILL.md
@@ -44,7 +54,7 @@ Personal-use-of-skill/
     ...
 ```
 
-Do not copy `.codex/skills/.system`; it is bundled by Codex. Do not put `auth.json`, SQLite files, logs, history, `config.toml`, or plugin caches in this repository.
+Do not copy `.codex/AGENTS.md` automatically: it may contain machine-specific tool instructions. Do not copy `.codex/skills/.system`; it is bundled by Codex. Do not put `auth.json`, SQLite files, logs, history, `config.toml`, or plugin caches in this repository.
 
 ## Installer interaction
 
@@ -59,4 +69,4 @@ The local `$skill-installer` defaults to `$CODEX_HOME/skills`. For a new curated
 
 ## Script
 
-On Windows, use `scripts/sync_codex_skills.ps1` for the repeatable clone/update/link/validation workflow. Read its `-WhatIf` output before the first real run.
+On Windows, use `scripts/sync_codex_skills.ps1` for the repeatable clone/update/link/validation workflow. Read its `-WhatIf` output before the first real run. Add `-SyncGlobalAgent` only when the global baseline should be checked or installed.

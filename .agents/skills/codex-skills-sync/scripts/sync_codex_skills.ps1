@@ -4,6 +4,9 @@ param(
     [string]$RepoDir = (Join-Path $HOME "Documents\Codex\Personal-use-of-skill"),
     [string]$SharedSkillsDir = (Join-Path $HOME ".agents\skills"),
     [string]$RepoSkillsDir = "",
+    [string]$GlobalAgentSource = "",
+    [string]$GlobalAgentPath = (Join-Path $HOME ".codex\AGENTS.md"),
+    [switch]$SyncGlobalAgent,
     [switch]$NoLink
 )
 
@@ -22,6 +25,9 @@ function Get-RepoSkillDirectories([string]$Path) {
 
 if ([string]::IsNullOrWhiteSpace($RepoSkillsDir)) {
     $RepoSkillsDir = Join-Path $RepoDir ".agents\skills"
+}
+if ([string]::IsNullOrWhiteSpace($GlobalAgentSource)) {
+    $GlobalAgentSource = Join-Path $RepoDir "global\AGENTS.shared.md"
 }
 
 if (Test-Path $RepoDir) {
@@ -50,6 +56,31 @@ $invalid = @($skillDirs | Where-Object { -not (Test-Path (Join-Path $_.FullName 
 if ($invalid.Count -gt 0) {
     $names = ($invalid | ForEach-Object Name) -join ", "
     throw "These direct child directories are not skills because SKILL.md is missing: $names"
+}
+
+if ($SyncGlobalAgent) {
+    if (-not (Test-Path $GlobalAgentSource)) {
+        throw "Global Agent source does not exist: $GlobalAgentSource"
+    }
+    $overridePath = Join-Path (Split-Path -Parent $GlobalAgentPath) "AGENTS.override.md"
+    if (Test-Path $overridePath) {
+        throw "AGENTS.override.md takes precedence and was left untouched: $overridePath"
+    }
+    if (Test-Path $GlobalAgentPath) {
+        $sourceHash = (Get-FileHash -LiteralPath $GlobalAgentSource -Algorithm SHA256).Hash
+        $targetHash = (Get-FileHash -LiteralPath $GlobalAgentPath -Algorithm SHA256).Hash
+        if ($sourceHash -ne $targetHash) {
+            throw "Local global Agent differs from the repository baseline. No overwrite was performed: $GlobalAgentPath"
+        }
+        Write-Host "Global Agent already matches the repository baseline"
+    } elseif ($PSCmdlet.ShouldProcess($GlobalAgentPath, "Copy shared global Agent from $GlobalAgentSource")) {
+        $parent = Split-Path -Parent $GlobalAgentPath
+        if (-not (Test-Path $parent)) {
+            New-Item -ItemType Directory -Path $parent -Force | Out-Null
+        }
+        Copy-Item -LiteralPath $GlobalAgentSource -Destination $GlobalAgentPath
+        Write-Host "Installed shared global Agent: $GlobalAgentPath"
+    }
 }
 
 if (-not $NoLink) {
