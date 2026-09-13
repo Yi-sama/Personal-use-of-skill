@@ -14,6 +14,7 @@ Maintain the user's personal skills repository as the source of truth and expose
 - Default repository: `https://github.com/Yi-sama/Personal-use-of-skill.git`
 - Default local clone: `$HOME/Documents/Codex/Personal-use-of-skill`
 - Default shared skills folder: `$HOME/.agents/skills`
+- Active Codex skills folder on Windows: `$HOME/.codex/skills`
 - On Windows, prefer a directory junction for the shared folder. On macOS/Linux, use a symlink.
 
 The repository should contain skills under `.agents/skills/`, with one skill directory per direct child. Each skill directory must contain `SKILL.md`. Keep repository-level documentation and manifests outside `.agents/skills/`.
@@ -24,12 +25,13 @@ Files under `global-agents/` are reference snapshots from individual computers. 
 
 ## Workflow
 
-1. Determine the platform, repository URL, clone directory, and shared skills directory. Preserve explicit user paths.
+1. Determine the platform, repository URL, clone directory, shared skills directory, and active Codex skills directory. Preserve explicit user paths.
 2. Inspect the clone, shared folder, and Git status before changing anything.
 3. If the clone does not exist, clone it. If it exists, fetch and update it with a fast-forward-only pull. Never discard uncommitted changes, reset, clean, or force-push.
 4. If the shared folder is absent, create the parent directory and link it to the repository's skills content. If it already exists and is not the expected link, stop and explain the conflict instead of overwriting it.
-5. Validate that direct skill directories contain `SKILL.md`, report missing or duplicate names, and tell the user to restart Codex only if a newly changed skill is not detected.
-6. After a successful update, report the repository path, commit, changed skills, and any conflicts.
+5. On Windows, expose each repository skill as a junction under the active Codex skills folder. Preserve `.system`; if a personal skill path already exists as a normal directory, stop and ask for a backup/migration instead of overwriting it.
+6. Validate that direct skill directories contain `SKILL.md`, report missing or duplicate names, and tell the user to restart Codex only if a newly changed skill is not detected.
+7. After a successful update, report the repository path, commit, changed skills, links, and any conflicts.
 
 ## Repository layout
 
@@ -52,6 +54,8 @@ Personal-use-of-skill/
 ```
 
 Do not copy `.codex/skills/.system`; it is bundled by Codex. Do not put `auth.json`, SQLite files, logs, history, `config.toml`, or plugin caches in this repository.
+
+The first migration on a computer must back up and move existing personal directories out of `$HOME/.codex/skills` before creating junctions. The script does not delete or overwrite ordinary directories.
 
 ## Installer interaction
 

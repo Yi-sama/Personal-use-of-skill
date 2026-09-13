@@ -3,7 +3,9 @@ param(
     [string]$RepoUrl = "https://github.com/Yi-sama/Personal-use-of-skill.git",
     [string]$RepoDir = (Join-Path $HOME "Documents\Codex\Personal-use-of-skill"),
     [string]$SharedSkillsDir = (Join-Path $HOME ".agents\skills"),
+    [string]$CodexSkillsDir = (Join-Path $HOME ".codex\skills"),
     [string]$RepoSkillsDir = "",
+    [switch]$NoCodexLinks,
     [switch]$NoLink
 )
 
@@ -18,6 +20,10 @@ function Assert-GitRepository([string]$Path) {
 function Get-RepoSkillDirectories([string]$Path) {
     Get-ChildItem -LiteralPath $Path -Directory -Force |
         Where-Object { $_.Name -notin @(".git", ".github") }
+}
+
+function Resolve-ExistingPath([string]$Path) {
+    return (Resolve-Path -LiteralPath $Path).Path
 }
 
 if ([string]::IsNullOrWhiteSpace($RepoSkillsDir)) {
@@ -75,7 +81,36 @@ if (-not $NoLink) {
     }
 }
 
+if (-not $NoCodexLinks) {
+    if (-not (Test-Path $CodexSkillsDir)) {
+        $parent = Split-Path -Parent $CodexSkillsDir
+        if ($PSCmdlet.ShouldProcess($CodexSkillsDir, "Create active Codex skills directory")) {
+            New-Item -ItemType Directory -Path $parent -Force | Out-Null
+            New-Item -ItemType Directory -Path $CodexSkillsDir -Force | Out-Null
+        }
+    }
+
+    foreach ($skillDir in $skillDirs) {
+        $linkPath = Join-Path $CodexSkillsDir $skillDir.Name
+        $targetPath = $skillDir.FullName
+        if (Test-Path $linkPath) {
+            $item = Get-Item -LiteralPath $linkPath -Force
+            $target = $item.Target
+            if ($item.LinkType -eq "Junction" -and $target -and ((Resolve-ExistingPath $target) -eq (Resolve-ExistingPath $targetPath))) {
+                continue
+            }
+            throw "Active Codex skill path already exists and is not the expected junction: $linkPath"
+        }
+        if ($PSCmdlet.ShouldProcess($linkPath, "Create directory junction to $targetPath")) {
+            cmd /c mklink /J "$linkPath" "$targetPath" | Out-Host
+        }
+    }
+}
+
 Write-Host "Repository: $RepoDir"
 Write-Host "Commit:     $(git -C $RepoDir rev-parse --short HEAD)"
 Write-Host "Skills:     $($skillDirs.Count)"
 $skillDirs | ForEach-Object { Write-Host "  - $($_.Name)" }
+if (-not $NoCodexLinks) {
+    Write-Host "Codex:      $CodexSkillsDir"
+}
