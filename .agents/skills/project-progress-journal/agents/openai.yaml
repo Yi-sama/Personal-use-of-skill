@@ -1,0 +1,7 @@
+interface:
+  display_name: "Project Progress Journal"
+  short_description: "Track progress, notes, and debug logs."
+  default_prompt: "Use $project-progress-journal to maintain concise daily progress, durable project notes, and 5-day debug logs."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Memory Verification"
+  short_description: "Load project rules, reuse known fixes, and report tool errors"
+  default_prompt: "Load project rules and the compact known-error index before changing files, report every tool failure transparently, preserve traceable memory, and separate AI, automated, and human verification."

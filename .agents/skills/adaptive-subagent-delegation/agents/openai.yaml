@@ -1,0 +1,7 @@
+interface:
+  display_name: "Adaptive Subagent Delegation"
+  short_description: "Delegate medium or large work when it adds value."
+  default_prompt: "Use $adaptive-subagent-delegation to decide whether this medium or large task benefits from subagents, then preserve delegated ownership through completion."
+
+policy:
+  allow_implicit_invocation: true

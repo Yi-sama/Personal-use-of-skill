@@ -1,0 +1,7 @@
+interface:
+  display_name: "Remote Low-Memory Server"
+  short_description: "Safely operate a 1.6GB RAM remote Linux server"
+  default_prompt: "Use $remote-low-memory-server before making changes on my remote server."
+
+policy:
+  allow_implicit_invocation: false

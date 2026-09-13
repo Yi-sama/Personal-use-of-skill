@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mandatory Subagent Delegation"
+  short_description: "Force non-trivial work through subagents first."
+  default_prompt: "Use $mandatory-subagent-delegation to route implementation, verification, or codebase-understanding work through subagents first."
+
+policy:
+  allow_implicit_invocation: true
