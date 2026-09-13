@@ -27,9 +27,16 @@ function Resolve-ExistingPath([string]$Path) {
 }
 
 if ([string]::IsNullOrWhiteSpace($RepoDir)) {
+    $scriptRepo = Split-Path -Parent (Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)))
     $desktopRepo = Join-Path $HOME "Desktop\个人资料\个人Skills\Personal-use-of-skill"
     $documentsRepo = Join-Path $HOME "Documents\Codex\Personal-use-of-skill"
-    $RepoDir = if (Test-Path $desktopRepo) { $desktopRepo } else { $documentsRepo }
+    $RepoDir = if (Test-Path (Join-Path $scriptRepo ".git")) {
+        $scriptRepo
+    } elseif (Test-Path $desktopRepo) {
+        $desktopRepo
+    } else {
+        $documentsRepo
+    }
 }
 
 if ([string]::IsNullOrWhiteSpace($RepoSkillsDir)) {
