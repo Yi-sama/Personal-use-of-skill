@@ -54,7 +54,11 @@ if ($invalid.Count -gt 0) {
 
 if (-not $NoLink) {
     $parent = Split-Path -Parent $SharedSkillsDir
-    New-Item -ItemType Directory -Path $parent -Force | Out-Null
+    if (-not (Test-Path $parent)) {
+        if ($PSCmdlet.ShouldProcess($parent, "Create directory")) {
+            New-Item -ItemType Directory -Path $parent -Force | Out-Null
+        }
+    }
 
     if (Test-Path $SharedSkillsDir) {
         $item = Get-Item -LiteralPath $SharedSkillsDir -Force
