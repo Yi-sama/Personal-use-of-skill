@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenAI Image API"
+  short_description: "Default image generation through configured /v1 providers"
+  default_prompt: "Use $openai-image-api with the configured OpenAI-compatible provider to generate or edit the image, validate text and dimensions, and save it under outputs."

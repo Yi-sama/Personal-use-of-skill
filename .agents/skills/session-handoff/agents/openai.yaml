@@ -1,0 +1,4 @@
+interface:
+  display_name: "Session Handoff"
+  short_description: "交接到新会话，先只读核对并简短中文汇报，等待授权后再修改"
+  default_prompt: "使用 $session-handoff 将当前对话实际交接到一个新 session，沿用默认模型；新会话先只读查看代码并用中文说明当前情况和正在解决的问题，报告后停止，等我明确授权再修改。"
