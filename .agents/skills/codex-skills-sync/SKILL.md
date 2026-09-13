@@ -33,7 +33,14 @@ The recommended layout is:
 
 ```text
 Personal-use-of-skill/
-  .agents/skills/\n    codex-skills-sync/\n      SKILL.md\n      agents/openai.yaml\n      scripts/sync_codex_skills.ps1\n    adaptive-subagent-delegation/\n      SKILL.md
+
+  .agents/skills/
+    codex-skills-sync/
+      SKILL.md
+      agents/openai.yaml
+      scripts/sync_codex_skills.ps1
+    adaptive-subagent-delegation/
+      SKILL.md
     ...
 ```
 
