@@ -1,7 +1,7 @@
 [CmdletBinding(SupportsShouldProcess)]
 param(
     [string]$RepoUrl = "https://github.com/Yi-sama/Personal-use-of-skill.git",
-    [string]$RepoDir = (Join-Path $HOME "Documents\Codex\Personal-use-of-skill"),
+    [string]$RepoDir = "",
     [string]$SharedSkillsDir = (Join-Path $HOME ".agents\skills"),
     [string]$CodexSkillsDir = (Join-Path $HOME ".codex\skills"),
     [string]$RepoSkillsDir = "",
@@ -26,6 +26,12 @@ function Resolve-ExistingPath([string]$Path) {
     return (Resolve-Path -LiteralPath $Path).Path
 }
 
+if ([string]::IsNullOrWhiteSpace($RepoDir)) {
+    $desktopRepo = Join-Path $HOME "Desktop\个人资料\个人Skills\Personal-use-of-skill"
+    $documentsRepo = Join-Path $HOME "Documents\Codex\Personal-use-of-skill"
+    $RepoDir = if (Test-Path $desktopRepo) { $desktopRepo } else { $documentsRepo }
+}
+
 if ([string]::IsNullOrWhiteSpace($RepoSkillsDir)) {
     $RepoSkillsDir = Join-Path $RepoDir ".agents\skills"
 }
@@ -38,13 +44,16 @@ if (Test-Path $RepoDir) {
     }
     if ($PSCmdlet.ShouldProcess($RepoDir, "Fetch and fast-forward from origin")) {
         git -C $RepoDir fetch --prune origin
+        if ($LASTEXITCODE -ne 0) { throw "Git fetch failed with exit code $LASTEXITCODE" }
         git -C $RepoDir pull --ff-only
+        if ($LASTEXITCODE -ne 0) { throw "Git pull failed with exit code $LASTEXITCODE" }
     }
 } else {
     $parent = Split-Path -Parent $RepoDir
     if ($PSCmdlet.ShouldProcess($RepoDir, "Clone $RepoUrl")) {
         New-Item -ItemType Directory -Path $parent -Force | Out-Null
         git clone $RepoUrl $RepoDir
+        if ($LASTEXITCODE -ne 0) { throw "Git clone failed with exit code $LASTEXITCODE" }
     }
 }
 
@@ -77,6 +86,7 @@ if (-not $NoLink) {
     } else {
         if ($PSCmdlet.ShouldProcess($SharedSkillsDir, "Create directory junction to $RepoSkillsDir")) {
             cmd /c mklink /J "$SharedSkillsDir" "$RepoSkillsDir" | Out-Host
+            if ($LASTEXITCODE -ne 0) { throw "Shared skills junction creation failed with exit code $LASTEXITCODE" }
         }
     }
 }
@@ -103,12 +113,15 @@ if (-not $NoCodexLinks) {
         }
         if ($PSCmdlet.ShouldProcess($linkPath, "Create directory junction to $targetPath")) {
             cmd /c mklink /J "$linkPath" "$targetPath" | Out-Host
+            if ($LASTEXITCODE -ne 0) { throw "Codex skill junction creation failed with exit code ${LASTEXITCODE}: $linkPath" }
         }
     }
 }
 
 Write-Host "Repository: $RepoDir"
-Write-Host "Commit:     $(git -C $RepoDir rev-parse --short HEAD)"
+$commit = git -C $RepoDir rev-parse --short HEAD
+if ($LASTEXITCODE -ne 0) { throw "Could not read repository commit with exit code $LASTEXITCODE" }
+Write-Host "Commit:     $commit"
 Write-Host "Skills:     $($skillDirs.Count)"
 $skillDirs | ForEach-Object { Write-Host "  - $($_.Name)" }
 if (-not $NoCodexLinks) {
