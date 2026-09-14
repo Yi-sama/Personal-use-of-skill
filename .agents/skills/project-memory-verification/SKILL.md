@@ -211,6 +211,9 @@ Read these only when the task needs their detail:
 - `references/error-index.md`: compact permanent-HASH index; always read this file at task start.
 - `references/error-0a8f92c4de0d.md`: UTF-8 text-writing case; read only when its trigger matches.
 - `references/error-75e0ba56ceb6.md`: Windows multiline patch transport case; read only when its trigger matches.
+- `references/error-5bd54090a30f.md`: restricted FastCtx traversal case; read only when its trigger matches.
+- `references/error-ea543e17f995.md`: unavailable WMI/CIM process command-line case; read only when its trigger matches.
+- `references/error-9c81d71b50e2.md`: optional OpenCV interpreter mismatch case; read only when its trigger matches.
 - `references/error-724f44f97dc7.md`: FastCtx direct invocation, continuation, regex, and guarded replacement case; read only when its trigger matches.
 - `references/verification-states.md`: state definitions and final-status rules.
 - `references/templates.md`: copyable project-memory, log, index, and verification templates.

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Proactive Delegation"
-  short_description: "Bias Codex toward spawning sub-agents for clear tasks."
-  default_prompt: "Use $proactive-subagent-delegation to proactively delegate bounded subtasks before doing the main work."

@@ -1,8 +1,8 @@
-## Mandatory Error Summary startup gate
+## Mandatory known-error startup gate
 
 For every task that inspects, searches, edits, or runs checks against local files:
 
-1. The first local-file operation is a bootstrap exception: use one targeted ordinary PowerShell/.NET or `rg` read to load `C:\Users\liurunsen\Desktop\个人资料\个人Skills\Error Summary\AGENTS.md` and its `docs/ERROR-INDEX.md`. Do not use FastCtx for these two bootstrap files.
+1. The first local-file operation is a bootstrap exception: use one targeted ordinary PowerShell/.NET or `rg` read to load `$HOME\.agents\skills\project-memory-verification\references\error-index.md`. Do not use FastCtx for this bootstrap file.
 2. Match cases by the concrete operation or observed failure. Planning an ordinary direct FastCtx `read`, `grep`, or `glob` call does not by itself trigger case `724f44f97dc7`.
 3. Read case `724f44f97dc7` before FastCtx `replace`, or when diagnosing FastCtx availability, invocation, `Partial`, path, encoding, glob, regex, or replacement diagnostics.
 4. FastCtx is optional. When used, call only the direct top-level `mcp__fastctx__read`, `mcp__fastctx__grep`, `mcp__fastctx__glob`, or `mcp__fastctx__replace` tools. Never call it through `functions.exec`, `tools.*`, or another generic wrapper.
@@ -93,6 +93,6 @@ Subagent 用于把宽而重的探索与核验从主线程隔离，减少上下�
 
 普通闲聊、一般知识问答、无需查看项目文件的讨论、翻译和纯头脑风暴，不需要使用该 skill。若对话从闲聊转为具体项目任务，必须在进行任何项目操作前启用该 skill。
 
-在查看项目文件、运行项目相关命令或修改任何文件之前，必须先阅读 `C:\Users\liurunsen\Desktop\个人资料\个人Skills\Error Summary`，必须逐项比对当前任务、运行环境、将要写入的内容和计划调用的工具；凡是触发条件匹配的错误案例，都必须通过其永久 HASH 打开并阅读详细案例，遵循其中已验证的方法。不得因任务看似简单而跳过错误案例检查。
+在查看项目文件、运行项目相关命令或修改任何文件之前，必须先阅读 `$HOME\.agents\skills\project-memory-verification\references\error-index.md`，逐项比对当前任务、运行环境、将要写入的内容和计划调用的工具；凡是触发条件匹配的错误案例，都必须通过其永久 HASH 打开并阅读对应 reference，遵循其中已验证的方法。不得因任务看似简单而跳过错误案例检查。
 
 处理缺陷时，必须定位并记录从症状到根本原因的因果链。除非用户明确接受为临时缓解措施，否则不得将兜底、重试、忽略错误、抑制报错、仅改测试或其他绕过方式宣称为修复。必须验证根因不再复现；可行时补充回归测试。
