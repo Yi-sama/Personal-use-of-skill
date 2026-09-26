@@ -1,7 +1,7 @@
 interface:
-  display_name: "Remote Low-Memory Server"
-  short_description: "Safely operate a 1.6GB RAM remote Linux server"
-  default_prompt: "Use $remote-low-memory-server before making changes on my remote server."
+  display_name: "Chengdu and US Servers"
+  short_description: "Inspect or operate Chengdu, US, or both servers safely"
+  default_prompt: "Use $remote-low-memory-server to inspect the server(s) I specify: Chengdu, US, or both; ask which if unspecified."
 
 policy:
   allow_implicit_invocation: false
