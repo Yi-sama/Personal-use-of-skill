@@ -1,0 +1,7 @@
+interface:
+  display_name: "Local v2rayN Proxy"
+  short_description: "Use the local proxy for task-scoped network access."
+  default_prompt: "Use $v2rayn-proxy to inspect this computer's local proxy, select US-owner-unlimited only if needed, verify the target, and scope proxy settings to local task processes without changing system proxy or TUN."
+
+policy:
+  allow_implicit_invocation: true

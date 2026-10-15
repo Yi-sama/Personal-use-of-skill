@@ -13,3 +13,4 @@
 - For defects, establish the root cause. Do not call retries, suppression, ignored errors, or test-only changes a fix unless the user accepts a workaround.
 - Verify observable behavior, not only exit codes. Report tool failures and separate facts, inferences, unknowns, automated checks, and pending human validation.
 - Keep final responses concise: changes, verification, remaining risk, and required user action.
+- When a local website/download/API/Git HTTPS connection times out or fails to connect, or a task explicitly needs a proxy, use `v2rayn-proxy`: inspect this computer's v2rayN, prefer `US-owner-unlimited`, verify the target, and scope proxy settings to task processes. The main agent owns any node switch; never enable system proxy/TUN or disable TLS verification automatically. Hosted search tools do not inherit local proxy settings.
