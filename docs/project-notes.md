@@ -22,6 +22,7 @@
 
 ## Decisions
 
+- On 2026-10-23, prepared the shared `distinctive-ai-design` and `playwright` imports for publication and merged the local Remotion image-API guidance into the existing remote 4.0.538 skill without downgrading its references. Used an isolated Git worktree because the primary checkout contains unrelated uncommitted changes. New imports were checked against their installed source files; no credentials or nested `.git` directory were copied. Live agent invocation was not tested.
 - Only the main agent manages node changes; child commands receive process-scoped proxy variables. Do not change system proxy/TUN or bypass TLS checks.
 - SQLite access is read-only and explicitly closed. No subscription or credential data is printed.
 - Windows UI Automation targets the observed profile grid and Enter activation behavior. Text/cell matches are deduplicated by row runtime ID.

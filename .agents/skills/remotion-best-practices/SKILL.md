@@ -10,6 +10,28 @@ Users may make edits in the code outside of the conversation.
 
 If you detect a surprising change made in the meanwhile, don't overwrite it, assume it was intentional or ask for confirmation.
 
+## Generate image assets with the configured API
+
+When a video needs generated raster assets, load the sibling [OpenAI Image API skill](../openai-image-api/SKILL.md). Use its existing scripts for generation, reference images, and edits instead of implementing another API client.
+
+- Use the image-specific `OPENAI_IMAGE_BASE_URL` and `OPENAI_IMAGE_API_KEY` settings. When using saved settings on Windows, refresh these two values from the per-user environment before invoking the helper, since already-running clients may inherit an old endpoint. Respect explicit one-off overrides. If settings are absent, ask the user to configure them; do not silently substitute a coding-provider key.
+- Keep credentials in the local CLI environment. Never put keys in React code, browser environment variables, prompts, public assets, or committed files.
+- Generate assets during authoring, then save them inside the Remotion project's `public/generated/` directory. Inspect the images and actual dimensions before using them.
+- Reference saved assets with Remotion `Img` and `staticFile('generated/scene-01.png')`. Do not call the image API from compositions, preview playback, or frame rendering.
+- Reuse approved images across previews and exports. Only generate new images when needed or requested; ordinary text and vector animation do not require image generation.
+
+Example from the Remotion project directory; replace `<image-skill-dir>` with the directory containing the linked image skill:
+
+```powershell
+foreach ($name in 'OPENAI_IMAGE_BASE_URL', 'OPENAI_IMAGE_API_KEY') {
+    $saved = [Environment]::GetEnvironmentVariable($name, 'User')
+    if ($saved) { [Environment]::SetEnvironmentVariable($name, $saved, 'Process') }
+}
+python "<image-skill-dir>/scripts/image_api.py" --base-url-env OPENAI_IMAGE_BASE_URL --api-key-env OPENAI_IMAGE_API_KEY --prompt "Product photography for the approved scene" --size "1536x1024" --quality medium --size-policy warn --out "./public/generated/scene-01.png"
+```
+
+Follow that skill's provider/model checks if the configured relay rejects a model. Report failures rather than replacing a failed generated image with an unrelated placeholder.
+
 ## Creating a video
 
 If the user asks to make, create, or build a new video or composition, load [Create a new Remotion video](./remotion-create/REFERENCE.md), whether or not a Remotion project already exists.
