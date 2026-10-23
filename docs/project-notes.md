@@ -5,6 +5,7 @@
 - Personal skills are maintained under `.agents/skills/`; this computer's shared `.agents/skills` folder and individual `.codex/skills` entries use junctions.
 - This computer's `$HOME/.codex/AGENTS.md` is a symbolic link to `global-agents/windows-fastctx/AGENTS.md`; changing the global trigger also changes that tracked file, without replacing the link.
 - `v2rayn-proxy` provides local Windows proxy inspection, preparation, target testing and child-process execution. Do not commit or push other pending changes as part of its installation.
+- `remotion-best-practices` is the official aggregate Remotion skill, imported from `remotion-dev/skills`; update it from upstream as a complete directory so its routed references stay consistent.
 
 ## Environment
 
